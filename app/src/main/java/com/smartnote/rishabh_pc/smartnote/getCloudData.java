@@ -17,8 +17,9 @@ import java.util.Objects;
 public class getCloudData extends AsyncTask<MainActivity,Integer,MainActivity>{
     String result="";
     HttpURLConnection conn;
+
     protected MainActivity doInBackground(MainActivity... ma) {
-            Log.d("hi", "" + R.id.recom1);
+            //Log.d("hi", "" + R.id.recom1);
             URL url = null;
             String data="";
 
