@@ -54,6 +54,6 @@ public class getCloudData extends AsyncTask<MainActivity,Integer,MainActivity>{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ma.note.setText(ma.note.getText()+" "+conn.getHeaderFields());
+        ma.search.setText(ma.search.getText()+" "+conn.getHeaderFields());
     }
 }

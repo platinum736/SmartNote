@@ -1,11 +1,13 @@
 package com.smartnote.rishabh_pc.smartnote;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
@@ -43,20 +45,37 @@ public class postCloudData extends AsyncTask<MainActivity , MainActivity, MainAc
 
     JSONObject notes = new JSONObject();
     JSONObject returnObject = null;
+    MainActivity m = null;
 
 
     protected MainActivity doInBackground(MainActivity... mainActivities) {
         URL url = null;
         String data = "";
-        int start = 0, end = 0;
+        String tag;
 
-        for (int i = 0; i < mainActivities[0].note.getText().length(); i++) {
-            if (mainActivities[0].note.getText().charAt(i) != ' ') {
+        for (Button b : mainActivities[0].Tags) {
+            try {
+                tag = b.getText().toString();
+                notes.accumulate("name", b.getText());
+                Log.d("Tags:", b.getText().toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            notes.accumulate("name", mainActivities[0].search.getText().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+       /* int start = 0, end = 0;
+
+        for (int i = 0; i < mainActivities[0].search.getText().length(); i++) {
+            if (mainActivities[0].search.getText().charAt(i) != ' ') {
                 //   notes.accumulate("name",note.getText().subSequence(start,i));
-            } else if (mainActivities[0].note.getText().charAt(i) == ' ') {
+            } else if (mainActivities[0].search.getText().charAt(i) == ' ') {
                 end = i;
                 try {
-                    notes.accumulate("name", mainActivities[0].note.getText().subSequence(start, end));
+                    notes.accumulate("name", mainActivities[0].search.getText().subSequence(start, end));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (ArrayIndexOutOfBoundsException e1) {
@@ -66,8 +85,9 @@ public class postCloudData extends AsyncTask<MainActivity , MainActivity, MainAc
             }
             //  Log.d("current char", String.valueOf(note.getText().charAt(i)));
         }
-
+       */
         try {
+
             url = new URL("http://54.152.214.89:1337");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
@@ -105,24 +125,52 @@ public class postCloudData extends AsyncTask<MainActivity , MainActivity, MainAc
     }
 
 
-    protected void onPostExecute(MainActivity mainActivity) {
+    protected void onPostExecute(final MainActivity mainActivity) {
         super.onPostExecute(mainActivity);
 
         String options = null;
         String name;
         mainActivity.buttonlayout.removeAllViews();
+        m = mainActivity;
+
         for (int i = 1; i <= returnObject.length(); i++) {
-                name = "recom" + i;
-                mainActivity.recom = new Button(mainActivity);
-                mainActivity.buttonlayout.addView(mainActivity.recom);
-                try {
-                    options = returnObject.getString(name);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-                mainActivity.recom.setText(options);
-                mainActivity.recom.setVisibility(View.VISIBLE);
-                Log.d("Response post execute::", "" + options);
+            name = "recom" + i;
+            mainActivity.recom = new Button(mainActivity);
+            mainActivity.buttonlayout.addView(mainActivity.recom);
+            try {
+                options = returnObject.getString(name);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+            mainActivity.recom.setId(i);
+            mainActivity.recom.setText(options);
+            mainActivity.recom.setVisibility(View.VISIBLE);
+            mainActivity.recom.setOnClickListener(addTag);
+            Log.d("Response post execute::", "" + options);
         }
     }
+
+
+    View.OnClickListener addTag = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d("Event:", "Adding tag");
+            Button b = (Button) v;
+            m.buttnCount++;
+            m.Tags.add(b);
+            b.setId(m.buttnCount);
+            b.setText(b.getText());
+
+            // mainActivity.search.setText(mainActivity.search.getText()+" "+b.getText());
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams
+                    (RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+            b.setLayoutParams(layoutParams);
+            m.buttonlayout.removeView(b);
+            m.textbuttonrelative.addView(b);
+            b.setOnClickListener(m.delTag);
+            //Delete the clicked button
+            Log.d("Button id", b.toString());
+        }
+    };
 }
