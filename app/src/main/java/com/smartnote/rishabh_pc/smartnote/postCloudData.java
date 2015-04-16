@@ -43,30 +43,14 @@ public class postCloudData extends AsyncTask<MainActivity , MainActivity, MainAc
     String result = "";
     HttpURLConnection conn;
 
-    JSONObject notes = new JSONObject();
-    JSONObject returnObject = null;
     MainActivity m = null;
+ //   JSONObject returnObject;
 
 
     protected MainActivity doInBackground(MainActivity... mainActivities) {
         URL url = null;
         String data = "";
-        String tag;
 
-        for (Button b : mainActivities[0].Tags) {
-            try {
-                tag = b.getText().toString();
-                notes.accumulate("name", b.getText());
-                Log.d("Tags:", b.getText().toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            notes.accumulate("name", mainActivities[0].search.getText().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
        /* int start = 0, end = 0;
 
         for (int i = 0; i < mainActivities[0].search.getText().length(); i++) {
@@ -88,13 +72,13 @@ public class postCloudData extends AsyncTask<MainActivity , MainActivity, MainAc
        */
         try {
 
-            url = new URL("http://54.152.214.89:1337");
+            url = new URL("http://52.5.140.180:1337");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoInput(true);
             conn.connect();
-            conn.getOutputStream().write(notes.toString().getBytes());
+            conn.getOutputStream().write(mainActivities[0].notes.toString().getBytes());
 
             result = conn.getResponseMessage();
             //       ma.note.setText(ma.note.getText()+" "+conn.getHeaderFields());
@@ -107,11 +91,11 @@ public class postCloudData extends AsyncTask<MainActivity , MainActivity, MainAc
                 sb.append(recommendation);
             }
             try {
-                returnObject = new JSONObject(sb.toString());
+                mainActivities[0].returnObject = new JSONObject(sb.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("Response", returnObject.toString());
+            Log.d("Response", mainActivities[0].returnObject.toString());
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -133,12 +117,12 @@ public class postCloudData extends AsyncTask<MainActivity , MainActivity, MainAc
         mainActivity.buttonlayout.removeAllViews();
         m = mainActivity;
 
-        for (int i = 1; i <= returnObject.length(); i++) {
+        for (int i = 1; i <= mainActivity.returnObject.length(); i++) {
             name = "recom" + i;
             mainActivity.recom = new Button(mainActivity);
             mainActivity.buttonlayout.addView(mainActivity.recom);
             try {
-                options = returnObject.getString(name);
+                options = mainActivity.returnObject.getString(name);
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }

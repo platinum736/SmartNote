@@ -7,5 +7,11 @@
     <string name="RecomendationBar">Recomendations</string>
     <string name="search">search</string>
     <string name="submit">s</string>
+    <string name="action_search">Save</string>
+    <string name="title_activity_tagging">tagging</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
