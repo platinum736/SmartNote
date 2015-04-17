@@ -6,11 +6,14 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/NewFile"
-        android:text="New"/>
+        android:text="New"
+        android:background="@drawable/shape"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listView" />
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:id="@+id/listView"
+        android:layout_margin="30dp"/>
 
 </LinearLayout>

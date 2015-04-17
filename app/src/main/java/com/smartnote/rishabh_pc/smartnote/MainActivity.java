@@ -1,6 +1,7 @@
 package com.smartnote.rishabh_pc.smartnote;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -273,6 +274,11 @@ public class MainActivity extends ActionBarActivity {
             textbuttonrelative.removeView(b);
         }
     };
+
+    public void onBackPressed() {
+        Intent intent=new Intent(MainActivity.this, fileActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
