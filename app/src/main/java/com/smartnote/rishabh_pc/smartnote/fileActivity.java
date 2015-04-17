@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smartnote.rishabh_pc.smartnote.MainActivity;
 import com.smartnote.rishabh_pc.smartnote.R;
@@ -132,9 +133,10 @@ public class fileActivity extends ActionBarActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             @Override
             public boolean onItemLongClick (AdapterView < ? > parent, View view,int position, long id){
+                TextView textView= (TextView) view;
                 Log.e("Long Click", ""+view.getId());
                 clickFinder = false;
-                showDeletePopup(view);
+                showDeletePopup(textView);
                 return false;
             }
         });
@@ -143,7 +145,7 @@ public class fileActivity extends ActionBarActivity {
 
 
    PopupWindow pwindo;
-   private void showDeletePopup(final View view){
+   private void showDeletePopup(final TextView view){
 
            Button yesbtn,nobtn;
 
@@ -153,7 +155,7 @@ public class fileActivity extends ActionBarActivity {
                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                View layout = inflater.inflate(R.layout.deletepopup,
                        (ViewGroup) findViewById(R.id.deletpopup_element));
-               pwindo = new PopupWindow(layout, 500, 500, true);
+               pwindo = new PopupWindow(layout, 500, 300, true);
                pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
                yesbtn= (Button) layout.findViewById(R.id.yes);
@@ -161,8 +163,8 @@ public class fileActivity extends ActionBarActivity {
                yesbtn.setOnClickListener(new View.OnClickListener() {
                    @Override
                    public void onClick(View v) {
-                       Log.d("Filename", view.toString());
-                       //deletefile(String filename);
+                       Log.d("Filename",view.getText().toString());
+                       deletefile(view.getText().toString());
                    }
                });
 
@@ -183,7 +185,34 @@ public class fileActivity extends ActionBarActivity {
            }
        }
 
-    private StringBuffer readFile(String filename) {
+   private void deletefile(String filename){
+       String filepath="/sdcard/NotesDir/"+filename;
+       File fdelete=new File(filepath);
+       Toast toast=new Toast(context);
+
+       if (fdelete.exists()) {
+           if (fdelete.delete()) {
+               System.out.println("file Deleted :" + filename);
+
+               toast.makeText(context,"File Deleted",Toast.LENGTH_LONG).show();
+           } else {
+               System.out.println("file not Deleted :" + filename);
+               toast.makeText(context,"File not Deleted",Toast.LENGTH_LONG).show();
+           }
+       }
+       else
+       {
+           System.out.println("File not found" + filename);
+           toast.makeText(context,"File not found",Toast.LENGTH_LONG).show();
+       }
+       pwindo.dismiss();
+       Intent intent = getIntent();
+       finish();
+       startActivity(intent);
+   }
+
+
+   private StringBuffer readFile(String filename) {
         String filepath="/sdcard/NotesDir/"+filename;
         File file=new File(filepath);
         String content = null,str;

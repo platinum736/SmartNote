@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -48,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
     Context context;
     Button action_save;
     postCloudData pc=new postCloudData();
-
+    private PopupWindow pwindo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,14 @@ public class MainActivity extends ActionBarActivity {
         submit=(ImageButton)findViewById(R.id.sub);
         context = this;
         Bundle extras=getIntent().getExtras();
+
+        search.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                search.setText("");
+                return false;
+            }
+        });
         if(extras!=null)
         {
             String noteData=extras.getString("filecontent", null);
@@ -148,8 +157,6 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    private PopupWindow pwindo;
-
     private void createPopup() {
         Button savebtn;
 
@@ -220,10 +227,20 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    public void onWindowFocusChanged (boolean hasFocus){
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            System.out.println("onWindowFocusChanged");
+            if(buttnCount>1)
+               System.out.println("Button Right" + Tags.get(buttnCount-1) .getRight());
+        }
+    }
+
     private void addTag() {
       //  Log.d("Event:","Submit");
         buttnCount++;
         Button b=new Button(context);
+
         Tags.add(b);
         b.setId(buttnCount);
         b.setText(search.getText().toString());
@@ -234,6 +251,7 @@ public class MainActivity extends ActionBarActivity {
         b.setLayoutParams(layoutParams);
         textbuttonrelative.addView(b);
         search.setText("");
+        System.out.println("Button Right" + Tags.get(buttnCount-1) .getRight());
       }
 
     private void createJson() throws JSONException, IOException {
