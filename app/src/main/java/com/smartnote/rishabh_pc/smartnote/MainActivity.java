@@ -2,7 +2,8 @@ package com.smartnote.rishabh_pc.smartnote;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,7 +22,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -34,6 +34,8 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.Gravity.TOP;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -44,11 +46,14 @@ public class MainActivity extends ActionBarActivity {
     ImageButton submit;
     LinearLayout buttonlayout;
     LinearLayout textbuttonrelative;
+    LinearLayout parentLinearLayout;
     List<Button> Tags = new ArrayList<Button>();
+    List<LinearLayout> rows=new ArrayList<LinearLayout>();
     static int buttnCount;
+    static int rowCount=1;
     Context context;
     Button action_save;
-    postCloudData pc=new postCloudData();
+   // postCloudData pc=new postCloudData();
     private PopupWindow pwindo;
 
     @Override
@@ -56,8 +61,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         search = (EditText) findViewById(R.id.searchfield);
-        buttonlayout = (LinearLayout) findViewById(R.id.button_layout);
         textbuttonrelative = (LinearLayout) findViewById(R.id.noteArea);
+        buttonlayout = (LinearLayout) findViewById(R.id.button_layout);
+
+        parentLinearLayout= (LinearLayout) findViewById(R.id.button_layout);
+        LinearLayout notesrow= (LinearLayout) findViewById(R.id.notesrow);
+        rows.add(notesrow);
+        rowCount=1;
+
         submit=(ImageButton)findViewById(R.id.sub);
         context = this;
         Bundle extras=getIntent().getExtras();
@@ -113,18 +124,43 @@ public class MainActivity extends ActionBarActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if(search.getText().charAt(search.getText().length()-1)==' ') {
-                        Log.d("Send","sending request");
-                        pc.execute(MainActivity.this);
-                    }
-                   }
                 }
+                if(isOnline())
+                   new postCloudData().execute(MainActivity.this);
+                else
+                {
+                   Toast toast=new Toast(context);
+                   Log.d("Net error","Net not present");
+                   toast.makeText(context,"Not Connected to internet",Toast.LENGTH_LONG).show();
+                   toast.setGravity(Gravity.TOP,0,0);
+                   pwindo.dismiss();
+                }
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
 
             }
         });
+    }
+
+    private boolean isOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()==NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
     }
 
     private void populateScreen(String noteData) {
@@ -147,12 +183,40 @@ public class MainActivity extends ActionBarActivity {
 
             b.setId(buttnCount);
             Tags.get(buttnCount-1).setText(text);
-            Tags.get(buttnCount-1).setOnClickListener(delTag);
-            LayoutParams layoutParams=new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+
+            //Setting the layout parameters for new button
+            LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             LinearLayout.LayoutParams linearparams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-            textbuttonrelative.setLayoutParams(linearparams);
+            rows.get(rowCount-1).setLayoutParams(linearparams);
+            b.setLayoutParams(layoutParams);
+            // b.setText(search.getText());
+
+            //Find measure of new button and current layout
+            rows.get(rowCount-1).measure(0, 0);
+            b.measure(0,0);
+
+            if(rows.get(rowCount-1).getMeasuredWidth()+b.getMeasuredWidth()>600)//rows.get(rowCount-1).getRight())
+            {
+                Log.e("Button Right",""+b.getMeasuredWidth()+" "+rows.get(rowCount-1).getMeasuredWidth()+" "+rows.get(rowCount-1).getRight());
+                LinearLayout newrow=new LinearLayout(context);
+                LinearLayout.LayoutParams rowparams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                newrow.setLayoutParams(rowparams);
+                newrow.setOrientation(LinearLayout.HORIZONTAL);
+
+                //add this new row to array list and give it a parent view
+                textbuttonrelative.addView(newrow);
+                rows.add(newrow);
+                rowCount++;
+            }
+
+
+            rows.get(rowCount-1).addView(b);
+
+            Tags.get(buttnCount-1).setOnClickListener(delTag);
+
+            //textbuttonrelative.setLayoutParams(linearparams);
             Tags.get(buttnCount-1).setLayoutParams(layoutParams);
-            textbuttonrelative.addView(Tags.get(buttnCount-1));
+            //rows.get(rowCount-1).addView(Tags.get(buttnCount-1));
         }
 
     }
@@ -241,15 +305,38 @@ public class MainActivity extends ActionBarActivity {
         buttnCount++;
         Button b=new Button(context);
 
+        //Add new button to the array list
         Tags.add(b);
         b.setId(buttnCount);
-        b.setText(search.getText().toString());
-        b.setOnClickListener(delTag);
-        LayoutParams layoutParams=new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+
+
+        //Setting the layout parameters for new button
+        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams linearparams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-        textbuttonrelative.setLayoutParams(linearparams);
+        rows.get(rowCount-1).setLayoutParams(linearparams);
         b.setLayoutParams(layoutParams);
-        textbuttonrelative.addView(b);
+        b.setText(search.getText());
+        //Find measure of new button and current layout
+        rows.get(rowCount-1).measure(0, 0);
+        b.measure(0,0);
+
+        if(rows.get(rowCount-1).getMeasuredWidth()+b.getMeasuredWidth()>rows.get(rowCount-1).getRight())
+        {
+            Log.e("Button Right",""+b.getMeasuredWidth()+" "+rows.get(rowCount-1).getMeasuredWidth()+" "+rows.get(rowCount-1).getRight());
+            LinearLayout newrow=new LinearLayout(context);
+            LinearLayout.LayoutParams rowparams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            newrow.setLayoutParams(rowparams);
+            newrow.setOrientation(LinearLayout.HORIZONTAL);
+
+           //add this new row to array list and give it a parent view
+            textbuttonrelative.addView(newrow);
+            rows.add(newrow);
+            rowCount++;
+        }
+
+
+        rows.get(rowCount-1).addView(b);
+        b.setOnClickListener(delTag);
         search.setText("");
         System.out.println("Button Right" + Tags.get(buttnCount-1) .getRight());
       }
@@ -259,6 +346,17 @@ public class MainActivity extends ActionBarActivity {
         String key;
         int i=0;
         notes=new JSONObject();
+
+        try {
+            if(search.getText().toString()!="search"&&search.getText().toString().trim().length()>0){
+                key="name"+i;
+                notes.accumulate(key, search.getText().toString());
+                Log.d("notes",notes.toString());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        i=1;
         for (Button b : Tags) {
             try {
                 tag = b.getText().toString();
@@ -270,15 +368,7 @@ public class MainActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
         }
-        try {
-            if(search.getText().toString()!="search"&&search.getText().toString().trim().length()>0){
-                key="name"+i;
-                notes.accumulate(key, search.getText().toString());
-                Log.d("notes",notes.toString());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
    //     postCloudData pc=new postCloudData();
    //     pc.execute(this);
     }
@@ -289,7 +379,18 @@ public class MainActivity extends ActionBarActivity {
             Button b=(Button)v;
             buttnCount--;
             Tags.remove(b);
-            textbuttonrelative.removeView(b);
+            LinearLayout parent= (LinearLayout) b.getParent();
+            parent.measure(0,0);
+            parent.removeView(b);
+            if(parent.getMeasuredWidth()==0)
+            {
+                LinearLayout superparent= (LinearLayout) parent.getParent();
+                superparent.removeView(parent);
+                rowCount--;
+                rows.remove(parent);
+            }
+
+
         }
     };
 
@@ -312,8 +413,16 @@ public class MainActivity extends ActionBarActivity {
             case R.id.action_filesave:
                 createPopup();
                 return true;
+            case R.id.action_Tag:
+                callTagScreen();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void callTagScreen() {
+        Intent intent=new Intent( MainActivity.this,tagScreen.class);
+        startActivity(intent);
     }
 }

@@ -1,0 +1,77 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#bbb"
+        android:orientation="horizontal">
+
+        <EditText
+            android:text="@string/search"
+            android:layout_weight="5"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_gravity="start"
+            android:layout_margin="2dp"
+            android:background="#fff"
+            android:id="@+id/searchfield"/>
+        <ImageButton
+            android:src="@drawable/submit"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="2dp"
+            android:background="#fff"
+            android:id="@+id/sub"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        android:id="@+id/text_button"
+        android:background="#fff"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Note"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="45dp"
+            android:id="@+id/noteArea"
+            android:background="@drawable/shape"
+            android:orientation="vertical"
+            android:layout_margin="1dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/notesrow">
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Our Recomendations"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#ff20cfff"
+            android:layout_margin="3dp"
+            android:id="@+id/button_layout"
+            android:layout_below="@id/noteArea">
+         </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+
+
+
+<!-- From: file:/C:/Users/Devendra/AndroidStudioProjects/SmartNote/app/src/main/res/layout/activity_main.xml -->

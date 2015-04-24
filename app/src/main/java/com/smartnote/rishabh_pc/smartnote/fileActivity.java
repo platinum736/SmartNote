@@ -176,10 +176,6 @@ public class fileActivity extends ActionBarActivity {
                        pwindo.dismiss();
                    }
                });
-
-
-
-
            } catch (Exception e) {
                e.printStackTrace();
            }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Notes Details"
+        android:id="@+id/notesdetails"
+        android:layout_marginBottom="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="#000"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/shape"
+            android:padding="10dp"
+            android:layout_marginLeft="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:textSize="25dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/tagupperbutton"
+                android:gravity="center"
+                android:id="@+id/year"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:textSize="50dp"
+                android:background="@drawable/tagbuttons"
+                android:gravity="center"
+                android:id="@+id/date"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:textSize="25dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/tagupperbutton"
+                android:gravity="center"
+                android:id="@+id/clockType"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@drawable/tagbuttons"
+                android:id="@+id/time"
+                android:gravity="center"
+                android:textSize="50dp"/>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/tagLoc"
+        android:background="#0f0"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="150dp"
+        android:background="#0ff"
+        android:text="Put your notification note here"
+        android:id="@+id/notificationNote"/>
+</LinearLayout>
+<!-- From: file:/C:/Users/Devendra/AndroidStudioProjects/SmartNote/app/src/main/res/layout/tagscreen.xml -->

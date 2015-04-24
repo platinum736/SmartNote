@@ -8,10 +8,22 @@
     <string name="search">search</string>
     <string name="submit">s</string>
     <string name="action_search">Save</string>
-    <string name="title_activity_tagging">tagging</string>
+    <string name="title_activity_tagging">Smart Note</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
     <string name="hello_world">Hello world!</string>
+    <string name="datePickerTitle">DatePicker</string>
+    <string name="timePickerTitle">Time Picker</string>
+
+    <string name="google_maps_key">AIzaSyCKuuzf2cBegz2dPy8oCo6Ng_QpemJ5AEY</string>
+
+    <string name="str_btn_find">Find</string>
+    <string name="current_location">CurrLoc</string>
+    <string name="buttn">OK</string>
+    <string name="buttn1">Cancel</string>
+    <string name="autocomplete_hint">Enter place name or address</string>
+    <string name="hnt_et_location">Enter location</string>
+
 
 </resources>

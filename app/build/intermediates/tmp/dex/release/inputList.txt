@@ -1,0 +1,5 @@
+C:\Users\rishabh-pc\AndroidStudioProjects\SmartNote\app\build\intermediates\classes\release
+C:\Users\rishabh-pc\AndroidStudioProjects\SmartNote\app\build\intermediates\pre-dexed\release\support-annotations-22.0.0-7fa6a6a25296701574148402c358d3dacf205c05.jar
+C:\Users\rishabh-pc\AndroidStudioProjects\SmartNote\app\build\intermediates\pre-dexed\release\internal_impl-22.0.0-057a14bd379e9422c350c8179f7403e59e252159.jar
+C:\Users\rishabh-pc\AndroidStudioProjects\SmartNote\app\build\intermediates\pre-dexed\release\classes-79ae725322d6aa9279a0d39479f8297ebbfdaa98.jar
+C:\Users\rishabh-pc\AndroidStudioProjects\SmartNote\app\build\intermediates\pre-dexed\release\classes-4a884269af9ff103ed1f31a907330812e6f1527b.jar

@@ -1,21 +1,14 @@
 package com.smartnote.rishabh_pc.smartnote;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,14 +17,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.Iterator;
 
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
 import static com.smartnote.rishabh_pc.smartnote.R.layout.activity_main;
 
 /**
@@ -50,64 +42,44 @@ public class postCloudData extends AsyncTask<MainActivity , MainActivity, MainAc
     protected MainActivity doInBackground(MainActivity... mainActivities) {
         URL url = null;
         String data = "";
+            try {
 
-       /* int start = 0, end = 0;
+                url = new URL("http://52.1.219.41:1337");
 
-        for (int i = 0; i < mainActivities[0].search.getText().length(); i++) {
-            if (mainActivities[0].search.getText().charAt(i) != ' ') {
-                //   notes.accumulate("name",note.getText().subSequence(start,i));
-            } else if (mainActivities[0].search.getText().charAt(i) == ' ') {
-                end = i;
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoInput(true);
+                conn.connect();
+                conn.getOutputStream().write(mainActivities[0].notes.toString().getBytes());
+
+                result = conn.getResponseMessage();
+              //  Log.d("Response",""+ conn.getResponseCode());
+
+                InputStream inputStream = new BufferedInputStream(conn.getInputStream());
+                StringBuilder sb = new StringBuilder();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String recommendation;
+                while ((recommendation = bufferedReader.readLine()) != null) {
+                    sb.append(recommendation);
+                }
                 try {
-                    notes.accumulate("name", mainActivities[0].search.getText().subSequence(start, end));
+                    mainActivities[0].returnObject = new JSONObject(sb.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
-                } catch (ArrayIndexOutOfBoundsException e1) {
-                    e1.printStackTrace();
                 }
-                start = i + 1;
-            }
-            //  Log.d("current char", String.valueOf(note.getText().charAt(i)));
-        }
-       */
-        try {
+                //Log.d("Response", mainActivities[0].returnObject.toString());
 
-            url = new URL("http://52.5.140.180:1337");
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setDoInput(true);
-            conn.connect();
-            conn.getOutputStream().write(mainActivities[0].notes.toString().getBytes());
-
-            result = conn.getResponseMessage();
-            //       ma.note.setText(ma.note.getText()+" "+conn.getHeaderFields());
-
-            InputStream inputStream = new BufferedInputStream(conn.getInputStream());
-            StringBuilder sb = new StringBuilder();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String recommendation;
-            while ((recommendation = bufferedReader.readLine()) != null) {
-                sb.append(recommendation);
-            }
-            try {
-                mainActivities[0].returnObject = new JSONObject(sb.toString());
-            } catch (JSONException e) {
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.d("Response", mainActivities[0].returnObject.toString());
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        conn.disconnect();
+            conn.disconnect();
         return mainActivities[0];
     }
-
 
     protected void onPostExecute(final MainActivity mainActivity) {
         super.onPostExecute(mainActivity);
